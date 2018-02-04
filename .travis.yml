@@ -26,3 +26,5 @@ deploy:
   script: docker push lacledeslan/gamesvr-hldms-freeplay
   on:
     branch: master
+after_deploy:
+  - curl -X POST https://hooks.microbadger.com/images/lacledeslan/gamesvr-cssource/$MICROBADGER_TOKEN
