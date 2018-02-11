@@ -10,9 +10,12 @@ git:
 services:
   - docker
 
+before_install:
+  - docker pull lacledeslan/gamesvr-hldms
+
 script:
   - docker version
-  - docker build --no-cache --tag lltest/gamesvr-hldms-freeplay --tag lacledeslan/gamesvr-hldms-freeplay --build-arg BUILDNODE=TravisCI -f Dockerfile.linux .
+  - docker build --no-cache --tag lltest/gamesvr-hldms-freeplay --tag lacledeslan/gamesvr-hldms-freeplay --build-arg BUILDNODE=TravisCI --build-arg SOURCE_COMMIT="$TRAVIS_COMMIT" -f Dockerfile.linux .
   - docker run -it --rm lltest/gamesvr-hldms-freeplay ./ll-tests/gamesvr-hldms-freeplay.sh
 
 notifications:
