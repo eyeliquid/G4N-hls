@@ -14,30 +14,23 @@ LABEL com.lacledeslan.build-node=$BUILDNODE `
       org.label-schema.description="LL Half-Life Deathmatch Source Dedicated Freeplay Server" `
       org.label-schema.vcs-url="https://github.com/LacledesLAN/gamesvr-hldms-freeplay"
 
-COPY ./sourcemod.linux /app/hl1mp/
+COPY --chown=HLDMS:root ./sourcemod.linux /app/hl1mp/
 
-COPY ./sourcemod-configs /app/hl1mp/
+COPY --chown=HLDMS:root ./sourcemod-configs /app/hl1mp/
 
-COPY ./dist /app/
+COPY --chown=HLDMS:root ./dist /app/
 
-COPY ./ll-tests/*.sh /app/ll-tests
-
-RUN chmod +rx /app/ll-tests/*.sh &&`
-    chmod +rwx /app/ll-tests &&`
-    chown HLDMS:root -R /app/ll-tests;
+COPY --chown=HLDMS:root ./ll-tests/*.sh /app/ll-tests
 
 # UPDATE USERNAME & ensure permissions
 RUN usermod -l HLDMSFreeplay HLDMS &&`
-    find /app -type d -exec chmod 774 {} + &&`
     chmod +x /app/ll-tests/*.sh &&`
-    mkdir -p /app/hl1mp/logs &&`
-    echo "Permissions hacks until 17.09+ makes it into Docker Cloud" &&`
-        chmod -R 774 /app/hl1mp/addons &&`
-        chmod -R 774 /app/hl1mp/cfg &&`
-        chmod -R 774 /app/hl1mp/logs;
+    mkdir -p /app/hl1mp/logs;
 
 USER HLDMSFreeplay
 
-WORKDIR /app/
+WORKDIR /app
+
+CMD ["/bin/bash"]
 
 ONBUILD USER root
