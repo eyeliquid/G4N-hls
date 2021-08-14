@@ -4,20 +4,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build",
+            "label": "Linux - Build Image",
             "type": "shell",
-            "command": "docker pull lacledeslan/gamesvr-hldms; docker build . -f Dockerfile.linux -t lltest/gamesvr-hldms-freeplay --no-cache --build-arg BUILDNODE=$env:computername;",
+            "command": "docker pull lacledeslan/gamesvr-hldms; docker build . -f linux.Dockerfile -t lltest/gamesvr-hldms-freeplay --no-cache --build-arg BUILDNODE=$env:computername;",
             "dependsOn": "download-sub-modules",
             "group": "build",
-            "identifier": "build-image",
             "problemMatcher": [],
             "promptOnClose": true
         },
         {
-            "label": "Build & Execute Self Tests",
+            "label": "Linux - Build & Execute Self Tests",
             "type": "shell",
             "command": "docker run -it --rm lltest/gamesvr-hldms-freeplay ./ll-tests/gamesvr-hldms-freeplay.sh;",
-            "dependsOn": "build-image",
+            "dependsOn": "Linux - Build Image",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -26,19 +25,19 @@
             "promptOnClose": true
         },
         {
-            "label": "Build & Run Interactive Server",
+            "label": "Linux - Build & Run Interactive Server",
             "type": "shell",
             "command": "docker run -it --net=host lltest/gamesvr-hldms-freeplay docker run -it --rm --net=host lacledeslan/gamesvr-hldms-freeplay ./srcds_run -game hl1mp +map crossfire -maxplayers 8 +sv_lan 1 +usercon +rcon_password \"test123\";",
-            "dependsOn": "build-image",
+            "dependsOn": "Linux - Build Image",
             "group": "build",
             "problemMatcher": [],
             "promptOnClose": true
         },
         {
-            "label": "Build & Shell In",
+            "label": "Linux - Build & Shell In",
             "type": "shell",
             "command": "docker run -it --net=host --rm lltest/gamesvr-hldms-freeplay;",
-            "dependsOn": "build-image",
+            "dependsOn": "Linux - Build Image",
             "group": "build",
             "problemMatcher": [],
             "promptOnClose": true
@@ -47,14 +46,13 @@
             "label": "Download git submodules",
             "type": "shell",
             "command": "git submodule foreach git pull origin master;",
-            "identifier": "download-sub-modules",
             "problemMatcher": [],
             "promptOnClose": true
         },
         {
             "label": "Update git submodules",
             "type": "shell",
-            "command": "git submodule update --recursive --remote;",
+            "command": "git submodule update --recursive --remote; git submodule foreach git pull origin master;",
             "problemMatcher": [],
             "promptOnClose": true
         }
